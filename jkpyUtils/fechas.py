@@ -27,7 +27,9 @@ class Fecha(object):
   -d -dm -m -y
   '''
   __formato='-d -dm -m -y'
-  def __init__(self, fecha):
+  def __init__(self, fecha=None):
+    if fecha == None:
+      fecha=datetime.today()
     day, mday, month, year  =self.GetInfo(fecha)
     self.day=day #número del día de la semana
     self.year=year #número del año
@@ -195,6 +197,8 @@ class Fecha(object):
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # calcula fechas
 if __name__ == '__main__':
+  #Fecha por defecto
+  print("  Fecha de hoy:", Fecha())
   fecha=Fecha('lunes 3 agosto 2020')
   fIni=str(fecha)
   for i in range(56):
@@ -213,5 +217,6 @@ if __name__ == '__main__':
   fecha.PasarAl('miércoles')
   
   print('  fecha final:', fecha)
-
+  
+  
 
