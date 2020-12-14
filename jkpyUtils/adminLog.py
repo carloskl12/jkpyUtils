@@ -1,5 +1,6 @@
 '''
-Clase para brindar la interfaz de logger
+Interfaz para brindar las funcionalidades de logger a una 
+Clase
 '''
 # paquetes para el loggin y gestión de errores
 from inspect import currentframe, getframeinfo
