@@ -4,6 +4,6 @@ __pycache__/
 # Archivos creados por setup
 build/
 dist/
-jkpyutils.egg-info/
+jkpyUtils.egg-info/
 #Ficheros temporales
 *~

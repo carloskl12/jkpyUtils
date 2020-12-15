@@ -2,6 +2,9 @@
 import pathlib
 from setuptools import setup, find_packages
 
+from jkpyUtils import __version__ as VERSION
+
+
 # The directory containing this file
 HERE = pathlib.Path(__file__).parent
 
@@ -10,12 +13,12 @@ README = (HERE / "README.md").read_text()
 
 # This call to setup() does all the work
 setup(
-    name="jkpyutils",
-    version="0.1.0",
+    name="jkpyUtils",
+    version=VERSION,
     description="Utilidades utilizando librerías estándar de python",
     long_description=README,
     long_description_content_type="text/markdown",
-    url="https://github.com/realpython/reader",
+    url="https://github.com/carloskl12/jkpyUtils",
     author="Jaka",
     #author_email="office@realpython.com",
     license="GNU",
