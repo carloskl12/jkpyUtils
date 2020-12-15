@@ -20,6 +20,7 @@ este modo de instalación mediante el script setup.py:
 			$ python setup.py develop
 
 Para desinstalarlo:
+
 			$ python setup.py develop --uninstall
 
 Finalmente si se quiere instalarlo como una librería que no se quiere modificar
