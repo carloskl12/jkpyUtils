@@ -1,4 +1,6 @@
 import math
+import numbers
+
 class Vector(object):
   '''
   Clase para encapsular un vector y trabajar
@@ -15,19 +17,25 @@ class Vector(object):
     return self._coordinates
 
   def __add__(self, other):
+    if isinstance(other, numbers.Number):
+      return Vector(*[xi+other for xi in self._v])
     other=self._verify(other)
     r=[ a+b for a,b in zip(other,self._v)]
     r=Vector(*r)
     return r
   
   def __sub__(self, other):
+    if isinstance(other, numbers.Number):
+      return Vector(*[xi-other for xi in self._v])
     other=self._verify(other)
-    r=[ a-b for a,b in zip(other,self._v)]
+    r=[ a-b for a,b in zip(self._v ,other)]
     r=Vector(*r)
     return r
   
   def __mul__(self, other):
     #Producto punto
+    if isinstance(other, numbers.Number):
+      return self%other
     other=self._verify(other)
     r=[ a*b for a,b in zip(other,self._v)]
     r=sum(r)
@@ -63,7 +71,16 @@ class Vector(object):
     else:
       raise Exception('  Error: la operación es válida solo entre vectores')
     return other
-
+  
+  def __next__(self):
+    self._i+=1
+    if self._i >= len(self._v):
+      raise StopIteration
+    return self._v[self._i]
+  
+  def __iter__(self):
+    self._i=-1
+    return self
   def ConvertTo(self, coordinates):
     result=None
     if coordinates=='polar':
