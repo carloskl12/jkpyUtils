@@ -24,6 +24,11 @@ class Vector(object):
     r=Vector(*r)
     return r
   
+  def __pow__(self,other):
+    if isinstance(other, numbers.Number):
+      return Vector(*[xi**other for xi in self._v])
+    if isinstance(other, Vector):
+        return Vector(*[xi**yi for xi,yi in zip(self._v, other)])
   def __sub__(self, other):
     if isinstance(other, numbers.Number):
       return Vector(*[xi-other for xi in self._v])
