@@ -53,6 +53,40 @@ def pdfinfo(infile):
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Función para extraer la dimensión de página como una tupla (width, height, unit)
 def pdfpagesize(fname):
-  dicPdfinfo = pdfinfo(fname)
-  vals= dicPdfinfo['Page size'].split(' ')
-  return (float(vals[0]), float(vals[2]), vals[3])
+    dicPdfinfo = pdfinfo(fname)
+    vals= dicPdfinfo['Page size'].split(' ')
+    return (float(vals[0]), float(vals[2]), vals[3])
+  
+  
+
+def imageUnitsConversion(fromUnit, toUnit , value )
+    '''
+    convierte unidades de impresión mm, pt, px
+    mms - mm : milímetros
+    pts - pt : puntos
+    pxs - px : pixeles
+    ins - in : inchs - pulgadas
+    1 pt = 4/3 px
+    72 pt = 1 in
+    72 pt = 25.4 mm 
+    '''
+    
+    funit = fromUnit.strip()[:2]
+    tunit = toUnit.strip()[:2]
+    if funit == tunit:
+        return value
+    dicConv={
+    'mm-pt': lambda x : x*72/25.4,
+    'px-pt': lambda x : x*3/4,
+    'in-pt': lambda x : x*72,
+    'pt-mm': lambda x : x*25.4/72,
+    'pt-px': lambda x : x*4/3,
+    'pt-in': lambda x : x/72,
+    'mm-px': lambda x : x*288/76.2,
+    'px-mm': lambda x : x*76.2/288,
+    'mm-in': lambda x : x/25.4,
+    'in-mm': lambda x : x*25.4,
+    'px-in': lambda x : x*3/288,
+    'in-px': lambda x : x*288/3
+    }
+    return dicConv['%s-%s'%(funit,tunit)](value)
