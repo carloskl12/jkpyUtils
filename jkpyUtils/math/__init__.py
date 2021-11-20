@@ -1,4 +1,4 @@
-from .functions import sin, cos, linspace
+from .functions import sin, cos, linspace, sqrt
 from .mathSet import MathSet
 from .vector import Vector, GetVectorFromPolar
 from .combinacionLineal import Polinomio, CombinacionLineal
