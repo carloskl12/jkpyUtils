@@ -27,4 +27,8 @@ def cos(x):
         return Vector(*r)
     return math.cos(x)
 
-
+def sqrt(x):
+    if isinstance(x, (list,tuple,Vector)):
+        r = [math.sqrt(xi) for xi in x]
+        return Vector(*r)
+    return math.sqrt(x)
