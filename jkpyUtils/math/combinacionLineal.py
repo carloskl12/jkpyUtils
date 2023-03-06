@@ -86,8 +86,10 @@ class Polinomio(object):
   
   @property
   def variable(self):
-    return self._variables[1]
-  
+    if self._orden_usual:
+        return self._variables[-2]
+    else:
+        return self._variables[1]
   @property
   def grado(self):
     return len(self._coeficientes)-1
@@ -99,14 +101,25 @@ class Polinomio(object):
       +'en variables: %s, %s'%(self.variable , polinomio.variable))
     coefA= self.coeficientes
     coefB= polinomio.coeficientes
-    nA= len(coefA)
-    nB= len(coefB)
+    
+    if self._orden_usual:
+      # Ajusta para que el grado de los términos sea ascendente
+      # pues eso asume el algoritmo de multiplicación
+      coefA = coefA[::-1]
+      coefB = coefB[::-1]
+      
+    
     gradoNuevo= self.grado+polinomio.grado
     coefR=[0]*(gradoNuevo+1)
     for i,a in enumerate(coefA):
       for j,b in enumerate(coefB):
         coefR[i+j]+=a*b
-    return Polinomio(coefR,self.variable)
+    
+    #if self._orden_usual:
+    #
+    #coefR = coefR[::-1]
+    
+    return Polinomio(coefR,variable=self.variable,orden_usual= self._orden_usual)
     
   def Sumar(self,polinomio):
     if self.variable != polinomio.variable:
@@ -116,13 +129,20 @@ class Polinomio(object):
     coefB= polinomio.coeficientes
     nA= len(coefA)
     nB= len(coefB)
-    if nA > nB:
-      coefB+=(0,)*(nA-nB)
-    elif nB > nA:
-      coefA+=(0,)*(nB-nA)
-    
-    coefR=[a+b for a,b in zip(nA,nB)]
-    return Polinomio(coefR,self.variable)
+    if self.orden_usual:
+      if nA > nB: #coloca al inicio los ceros para completar
+        coefB = (0,)*(nA-nB) + coefB
+      elif nB > nA:
+        coefA = (0,)*(nB-nA) + coefA
+    else: #coloca al final los ceros para completar
+      if nA > nB:
+        coefB+=(0,)*(nA-nB)
+      elif nB > nA:
+        coefA+=(0,)*(nB-nA)
+    if nA != nB:
+        print( coefB, coefA)
+    coefR=[a+b for a,b in zip(coefA,coefB)]
+    return Polinomio(coefR,self.variable, self._orden_usual)
   
   def Restar(self, polinomio):
     if self.variable != polinomio.variable:
@@ -170,7 +190,7 @@ class Polinomio(object):
           # Esto es en caso de que la constante 
           # sea 1, y no tenga variable
           cstr='1'
-          print('***** se da 1')
+          #print('***** se da 1')
         elif cstr=='-' and var =='':
           cstr='-1'
         s+='%s%s%s'%(signo,cstr,var)
