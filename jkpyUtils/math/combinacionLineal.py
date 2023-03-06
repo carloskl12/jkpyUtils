@@ -47,9 +47,19 @@ class CombinacionLineal(object):
 
 class Polinomio(object):
   '''
-  orden_usual: indica si se inicia desde el término de mayor grado
+  orden_usual: indica si se inicia desde el término de mayor grado en los 
+  coeficientes pasados para crear el polinomio. Se debe tener cuidado con 
+  el orden interno de los coeficientes, el cual siempre será de menor 
+  grado a mayor grado, orden usual afecta a como se muestra el polinomio y 
+  al momento de crearlo
   '''
   def __init__(self,coeficientes, variable='x', orden_usual=False):
+    
+    if isinstance( coeficientes, Polinomio):
+      self._coeficientes = coeficientes._coeficientes[::]
+      self._orden_usual = coeficientes._orden_usual
+      self._variables = coeficientes._variables
+      return
     
     self._orden_usual=orden_usual
     if orden_usual:
@@ -96,17 +106,16 @@ class Polinomio(object):
 
   def Multiplicar(self,polinomio):
     '''Multiplicación con otro polinomio'''
+    if isinstance(polinomio,(int, float)):
+      newPolinomio = Polinomio(self)
+      newPolinomio.escalar(polinomio)
+      return newPolinomio
     if self.variable != polinomio.variable:
       raise Exception('Error: los polinomios no son compatibles'
       +'en variables: %s, %s'%(self.variable , polinomio.variable))
     coefA= self.coeficientes
     coefB= polinomio.coeficientes
     
-    if self._orden_usual:
-      # Ajusta para que el grado de los términos sea ascendente
-      # pues eso asume el algoritmo de multiplicación
-      coefA = coefA[::-1]
-      coefB = coefB[::-1]
       
     
     gradoNuevo= self.grado+polinomio.grado
@@ -115,9 +124,10 @@ class Polinomio(object):
       for j,b in enumerate(coefB):
         coefR[i+j]+=a*b
     
-    #if self._orden_usual:
-    #
-    #coefR = coefR[::-1]
+    # Ajusta el orden de los coeficientes para que se entienda en orden usual
+    # si es necesario
+    if self._orden_usual:
+      coefR = coefR[::-1]
     
     return Polinomio(coefR,variable=self.variable,orden_usual= self._orden_usual)
     
@@ -125,39 +135,25 @@ class Polinomio(object):
     if self.variable != polinomio.variable:
       raise Exception('Error: los polinomios no son compatibles'
       +'en variables: %s, %s'%(self.variable , polinomio.variable))
+    
     coefA= self.coeficientes
     coefB= polinomio.coeficientes
     nA= len(coefA)
     nB= len(coefB)
-    if self.orden_usual:
-      if nA > nB: #coloca al inicio los ceros para completar
-        coefB = (0,)*(nA-nB) + coefB
-      elif nB > nA:
-        coefA = (0,)*(nB-nA) + coefA
-    else: #coloca al final los ceros para completar
-      if nA > nB:
-        coefB+=(0,)*(nA-nB)
-      elif nB > nA:
-        coefA+=(0,)*(nB-nA)
-
-    coefR=[a+b for a,b in zip(coefA,coefB)]
-    return Polinomio(coefR,self.variable, self._orden_usual)
-  
-  def Restar(self, polinomio):
-    if self.variable != polinomio.variable:
-      raise Exception('Error: los polinomios no son compatibles'
-      +'en variables: %s, %s'%(self.variable , polinomio.variable))
-    coefA= self.coeficientes
-    coefB= polinomio.coeficientes
-    nA= len(coefA)
-    nB= len(coefB)
+    # coloca al final los ceros para completar
     if nA > nB:
       coefB+=(0,)*(nA-nB)
     elif nB > nA:
       coefA+=(0,)*(nB-nA)
-    
-    coefR=[a-b for a,b in zip(nA,nB)]
-    return Polinomio(coefR,self.variable)
+    coefR=[a+b for a,b in zip(coefA,coefB)]
+    if self._orden_usual:
+        coefR = coefR[::-1]
+    return Polinomio(coefR,self.variable, self._orden_usual)
+  
+  def Restar(self, polinomio):
+    # cambia de signos los coeficientes
+    newPol = polinomio*(-1)
+    return self.Sumar(newPol)
   
   def escalar(self, k):
     self._coeficientes=[k*c for c in self._coeficientes]
@@ -219,5 +215,11 @@ class Polinomio(object):
     if isinstance(other,int):
       coeficientes=self._coeficientes[:]
       coeficientes[0]+=other
-      return Polinomio(coeficientes,variable=self.variable)
+      return Polinomio(coeficientes,variable=self.variable, orden_usual=self.orden_usual)
     return self.Sumar(other)
+  def __sub__(self, other):
+    if isinstance(other,int):
+      coeficientes=self._coeficientes[:]
+      coeficientes[0]+=other
+      return Polinomio(coeficientes,variable=self.variable)
+    return self.Restar(other)
