@@ -139,8 +139,7 @@ class Polinomio(object):
         coefB+=(0,)*(nA-nB)
       elif nB > nA:
         coefA+=(0,)*(nB-nA)
-    if nA != nB:
-        print( coefB, coefA)
+
     coefR=[a+b for a,b in zip(coefA,coefB)]
     return Polinomio(coefR,self.variable, self._orden_usual)
   
