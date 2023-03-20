@@ -158,6 +158,23 @@ class Polinomio(object):
   def escalar(self, k):
     self._coeficientes=[k*c for c in self._coeficientes]
   
+  def Ruffini(self, v):
+    """
+    División para un binomio lineal ax+b, donde v = -b/a
+    Retorna los coeficientes resultantes, el cociente y el residuo
+    """
+    
+    # Invierte coeficientes para iniciar desde el de mayor grado
+    coef = self._coeficientes[::-1]
+    coefR = [0]*len(coef)
+    for i, c in enumerate(coef):
+      if i == 0:
+        coefR[i] = c
+      else:
+        coefR[i] = coef[i]+coefR[i-1]*v
+    residuo = coefR[-1]
+    cociente = Polinomio(coefR[:-1],orden_usual=True)
+    return (cociente, residuo, coefR)
   #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   def __str__(self):
     nvars= len(self._variables)
