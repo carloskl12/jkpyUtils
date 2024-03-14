@@ -67,7 +67,7 @@ class Polinomio(object):
     #Ajusta las variables
     variables=['',variable]
     for i in range(len(coeficientes)-2):
-      variables.append('%s^%i'%(variable,i+2))
+      variables.append('%s^{%i}'%(variable,i+2))
     
     if orden_usual:
       variables=variables[::-1]
