@@ -240,3 +240,28 @@ class Polinomio(object):
       coeficientes[0]+=other
       return Polinomio(coeficientes,variable=self.variable)
     return self.Restar(other)
+    
+  
+  def derivada(self):
+    '''
+    Retorna el polinomio con su derivada
+    '''
+    # quita el primero porque su derivada es cero
+    coef = self._coeficientes[1:]
+    # el exponente baja a multiplicar a cada coeficiente
+    nuevos_c = [(i+1)*coef[i] for i in range(len(coef))]
+    variable = 'x'
+    try:
+        if self._orden_usual:
+            variable = self._variables[0].split('^')[0]
+        else:
+            variable = self._variables[-1].split('^')[0]
+    except:
+        variable = 'x'
+    
+    if self._orden_usual:
+        nuevos_c = nuevos_c[::-1]
+    
+    
+    return Polinomio(nuevos_c,variable=variable, orden_usual=self._orden_usual)
+    
